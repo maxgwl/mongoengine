@@ -33,7 +33,7 @@ class DeReference(object):
         self.max_depth = max_depth
         doc_type = None
 
-        if instance and instance._fields:
+        if instance and instance._fields and name in instance._fields:
             doc_type = instance._fields.get(name)
             if hasattr(doc_type, 'field'):
                 doc_type = doc_type.field
