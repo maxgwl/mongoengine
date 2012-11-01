@@ -1684,6 +1684,10 @@ class QuerySet(object):
         self._where_clause = where_clause
         return self
 
+#TODO: implement aggregation
+#TODO: removed "hasOwnProperty" from average - need to make sure we aren't
+#      accidentally accessing a built in property
+
     def sum(self, field):
         """Sum over the values of the specified field.
 
@@ -1695,9 +1699,9 @@ class QuerySet(object):
         """
         map_func = Code("""
             function() {
-                emit(1, this[field] || 0);
+                emit(1, this."""+field+""" || 0);
             }
-        """, scope={'field': field})
+        """)
 
         reduce_func = Code("""
             function(key, values) {
@@ -1725,10 +1729,9 @@ class QuerySet(object):
         """
         map_func = Code("""
             function() {
-                if (this.hasOwnProperty(field))
-                    emit(1, {t: this[field] || 0, c: 1});
+                    emit(1, {t: this."""+field+""" || 0, c: 1});
             }
-        """, scope={'field': field})
+        """)
 
         reduce_func = Code("""
             function(key, values) {
