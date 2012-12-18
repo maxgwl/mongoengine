@@ -121,10 +121,11 @@ class ValidationError(AssertionError):
 def get_document(name):
     doc = _document_registry.get(name, None)
     if not doc:
-        # Possible old style names
-        end = ".%s" % name
+        # Possible old style name
+        single_end = name.split('.')[-1]
+        compound_end = '.%s' % single_end
         possible_match = [k for k in _document_registry.keys()
-                          if k.endswith(end)]
+                          if k.endswith(compound_end) or k == single_end]
         if len(possible_match) == 1:
             doc = _document_registry.get(possible_match.pop(), None)
     if not doc:
